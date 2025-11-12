@@ -68,6 +68,8 @@ TEMPLATES = [
     },
 ]
 
+AUTH_USER_MODEL = 'bookshelf.CustomUser'
+
 WSGI_APPLICATION = 'LibraryProject.wsgi.application'
 
 
