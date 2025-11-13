@@ -48,12 +48,21 @@ class Book(models.Model):
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         related_name='books',
-        null=True,   # optional if some books are not assigned
+        null=True, 
         blank=True
     )
 
     def __str__(self):
         return f"{self.title} by {self.author}"
+
+    class Meta:
+        permissions = [
+            ("can_view", "Can view book"),
+            ("can_create", "Can create book"),
+            ("can_edit", "Can edit book"),
+            ("can_delete", "Can delete book"),
+        ]
+
 
 
 # CustomUser model
