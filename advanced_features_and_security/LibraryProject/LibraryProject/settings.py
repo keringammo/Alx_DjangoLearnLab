@@ -55,6 +55,11 @@ CSP_IMG_SRC = ("'self'", "data:")  # Allow inline images via data URI
 CSP_CONNECT_SRC = ("'self'",)
 CSP_FRAME_SRC = ("'none'",)  # No external iframes
 
+# Tell Django to trust the X-Forwarded-Proto header from the proxy
+# This is required when Django is behind a reverse proxy that terminates SSL
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+
 
 
 ALLOWED_HOSTS = []
