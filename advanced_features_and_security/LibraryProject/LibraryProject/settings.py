@@ -23,7 +23,39 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-3v(x+8e5#&^%2)s%p-e2i@ops#@i78jm)glc8-c2v%h&65rn!c'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# Production Security Settings
+
+# 1. Disable debug mode in production
+DEBUG = False
+
+# 2. Browser-side protections
+SECURE_BROWSER_XSS_FILTER = True        # Enables XSS filter in modern browsers
+SECURE_CONTENT_TYPE_NOSNIFF = True     # Prevents browsers from MIME-sniffing content
+X_FRAME_OPTIONS = 'DENY'                # Prevents your site from being framed (clickjacking protection)
+
+# 3. Secure cookies
+SESSION_COOKIE_SECURE = True            # Ensures session cookie is only sent over HTTPS
+CSRF_COOKIE_SECURE = True               # Ensures CSRF cookie is only sent over HTTPS
+
+# 4. Optional: Other HTTPS-related settings (recommended)
+SECURE_SSL_REDIRECT = True              # Redirect all HTTP requests to HTTPS
+SECURE_HSTS_SECONDS = 31536000          # HTTP Strict Transport Security (1 year)
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True   # Include all subdomains in HSTS policy
+SECURE_HSTS_PRELOAD = True              # Allows preloading HSTS in browsers
+
+# 5. Recommended additional security
+SECURE_REFERRER_POLICY = "strict-origin-when-cross-origin"
+
+# Only allow scripts and styles from your own domain and trusted sources
+CSP_DEFAULT_SRC = ("'self'",)
+CSP_SCRIPT_SRC = ("'self'", "https://cdnjs.cloudflare.com")
+CSP_STYLE_SRC = ("'self'", "https://fonts.googleapis.com")
+CSP_FONT_SRC = ("'self'", "https://fonts.gstatic.com")
+CSP_IMG_SRC = ("'self'", "data:")  # Allow inline images via data URI
+CSP_CONNECT_SRC = ("'self'",)
+CSP_FRAME_SRC = ("'none'",)  # No external iframes
+
+
 
 ALLOWED_HOSTS = []
 
@@ -49,6 +81,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'csp.middleware.CSPMiddleware',
 ]
 
 ROOT_URLCONF = 'LibraryProject.urls'
