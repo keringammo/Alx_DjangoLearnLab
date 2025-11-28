@@ -1,6 +1,4 @@
 from django.urls import path
-from django.contrib import admin
-from django.urls import path, include
 from .views import (
     BookListView,
     BookDetailView,
@@ -14,7 +12,7 @@ urlpatterns = [
     path('books/<int:pk>/', BookDetailView.as_view(), name='book-detail'),
     path('books/create/', BookCreateView.as_view(), name='book-create'),
 
-    # Update + Delete with PK (correct real-world URLs)
+    # Update + Delete with PK
     path('books/<int:pk>/update/', BookUpdateView.as_view(), name='book-update'),
     path('books/<int:pk>/delete/', BookDeleteView.as_view(), name='book-delete'),
 
