@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="profile-container">
+    <h2>Your Profile</h2>
+
+    {% if message %}
+        <div class="success-box">
+            <p>{{ message }}</p>
+        </div>
+    {% endif %}
+
+    <form method="POST" class="profile-form">
+        {% csrf_token %}
+        <label>Email</label>
+        <input type="email" name="email" value="{{ request.user.email }}" required>
+
+        <button type="submit" class="btn">Update Profile</button>
+    </form>
+
+    <p class="switch-link">
+        <a href="{% url 'logout' %}">Logout</a>
+    </p>
+</div>
+{% endblock %}
