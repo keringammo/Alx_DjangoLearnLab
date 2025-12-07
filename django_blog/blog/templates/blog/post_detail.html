@@ -1,15 +1,21 @@
-{% extends "base.html" %}
-{% block content %}
+<h3>Comments</h3>
 
-<h2>{{ object.title }}</h2>
-<p>{{ object.content }}</p>
-<p>By {{ object.author.username }} on {{ object.created_at|date:"M d, Y" }}</p>
+{% for comment in object.comments.all %}
+    <div class="comment">
+        <p><strong>{{ comment.author.username }}</strong> said:</p>
+        <p>{{ comment.content }}</p>
+        <small>{{ comment.created_at|date:"M d, Y H:i" }}</small>
+        {% if user == comment.author %}
+            <a href="{% url 'comment-update' comment.pk %}">Edit</a>
+            <a href="{% url 'comment-delete' comment.pk %}">Delete</a>
+        {% endif %}
+    </div>
+{% empty %}
+    <p>No comments yet. Be the first to comment!</p>
+{% endfor %}
 
-{% if user.is_authenticated and user == object.author %}
-    <a href="{% url 'post-update' object.pk %}">Edit</a> |
-    <a href="{% url 'post-delete' object.pk %}">Delete</a>
+{% if user.is_authenticated %}
+    <a href="{% url 'comment-create' object.pk %}" class="btn btn-primary">Add a Comment</a>
+{% else %}
+    <p><a href="{% url 'login' %}">Log in</a> to add a comment.</p>
 {% endif %}
-
-<a href="{% url 'post-list' %}">Back to All Posts</a>
-
-{% endblock %}

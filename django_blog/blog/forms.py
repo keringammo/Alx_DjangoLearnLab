@@ -1,31 +1,24 @@
 from django import forms
-from .models import Post
+from .models import Comment
 
-class PostForm(forms.ModelForm):
+class CommentForm(forms.ModelForm):
     class Meta:
-        model = Post
-        fields = ['title', 'content']  # author is set automatically in views
-
+        model = Comment
+        fields = ['content']
         widgets = {
-            'title': forms.TextInput(attrs={
-                'class': 'form-control',
-                'placeholder': 'Enter post title',
-            }),
             'content': forms.Textarea(attrs={
-                'class': 'form-control',
-                'placeholder': 'Write your content here...',
-                'rows': 6,
-            }),
+                'rows': 3,
+                'placeholder': 'Write your comment here...'
+            })
         }
-
-    def clean_title(self):
-        title = self.cleaned_data.get('title')
-        if len(title) < 5:
-            raise forms.ValidationError("Title must be at least 5 characters long.")
-        return title
+        labels = {
+            'content': ''
+        }
 
     def clean_content(self):
         content = self.cleaned_data.get('content')
-        if len(content) < 20:
-            raise forms.ValidationError("Content must be at least 20 characters long.")
+        if not content or content.strip() == '':
+            raise forms.ValidationError("Comment cannot be empty.")
+        if len(content) > 500:
+            raise forms.ValidationError("Comment cannot exceed 500 characters.")
         return content
