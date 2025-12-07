@@ -1,18 +1,21 @@
 from django.urls import path
-from . import views
+from .views import (
+    PostListView,
+    PostDetailView,
+    PostCreateView,
+    PostUpdateView,
+    PostDeleteView,
+    PostByTagListView,  # import the class-based view
+    SearchPostsView,    # optional if using a class-based search view
+)
 
 urlpatterns = [
-    path('post/', views.PostListView.as_view(), name='post-list'),
-    path('post/new/', views.PostCreateView.as_view(), name='post-create'),
-    path('post/<int:pk>/', views.PostDetailView.as_view(), name='post-detail'),
-    path('post/<int:pk>/update/', views.PostUpdateView.as_view(), name='post-update'),
-    path('post/<int:pk>/delete/', views.PostDeleteView.as_view(), name='post-delete'),
+    path('post/', PostListView.as_view(), name='post-list'),
+    path('post/new/', PostCreateView.as_view(), name='post-create'),
+    path('post/<int:pk>/', PostDetailView.as_view(), name='post-detail'),
+    path('post/<int:pk>/update/', PostUpdateView.as_view(), name='post-update'),
+    path('post/<int:pk>/delete/', PostDeleteView.as_view(), name='post-delete'),
 
-    # Search posts
-    path('search/', views.search_posts, name='search-posts'),
-
-    # Filter posts by tag
-    path('tags/<slug:tag_slug>/', views.posts_by_tag, name='posts-by-tag'),
+    path('search/', SearchPostsView.as_view(), name='search-posts'),
+    path('tags/<slug:tag_slug>/', PostByTagListView.as_view(), name='posts-by-tag'),
 ]
-
-
