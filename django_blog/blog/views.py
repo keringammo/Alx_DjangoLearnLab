@@ -1,8 +1,8 @@
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.urls import reverse_lazy
 from .models import Post
 from .forms import PostForm
-from django.urls import reverse_lazy
 
 # List view (public)
 class PostListView(ListView):
@@ -23,7 +23,8 @@ class PostCreateView(LoginRequiredMixin, CreateView):
     template_name = 'posts/post_form.html'
 
     def form_valid(self, form):
-        form.instance.author = self.request.user  # automatically set author
+        # Automatically set author to logged-in user
+        form.instance.author = self.request.user
         return super().form_valid(form)
 
 # Update view (only author)
@@ -33,8 +34,9 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     template_name = 'posts/post_form.html'
 
     def test_func(self):
+        # Only allow post author to edit
         post = self.get_object()
-        return self.request.user == post.author  # only author can edit
+        return self.request.user == post.author
 
 # Delete view (only author)
 class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
@@ -43,5 +45,7 @@ class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     success_url = reverse_lazy('post-list')
 
     def test_func(self):
+        # Only allow post author to delete
         post = self.get_object()
-        return self.request.user == post.author  # only author can delete
+        return self.request.user == post.author
+
