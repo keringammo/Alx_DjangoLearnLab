@@ -1,6 +1,6 @@
 from rest_framework import generics, permissions, status
 from rest_framework.response import Response
-from rest_framework.generics import get_object_or_404  # ✅ Use this from DRF
+from rest_framework.generics import get_object_or_404  # ✅ DRF version
 from .models import Post, Like
 from notifications.models import Notification
 from django.contrib.contenttypes.models import ContentType
@@ -9,7 +9,7 @@ class LikePostView(generics.GenericAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request, pk):
-        post = get_object_or_404(Post, pk=pk)  # ✅ Correct usage
+        post = get_object_or_404(Post, pk=pk)
         like, created = Like.objects.get_or_create(user=request.user, post=post)
         if not created:
             return Response({"message": "Already liked"}, status=status.HTTP_400_BAD_REQUEST)
@@ -29,7 +29,7 @@ class UnlikePostView(generics.GenericAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request, pk):
-        post = get_object_or_404(Post, pk=pk)  # ✅ Correct usage
+        post = get_object_or_404(Post, pk=pk)
         deleted, _ = Like.objects.filter(user=request.user, post=post).delete()
         if deleted:
             return Response({"message": "Post unliked"}, status=status.HTTP_200_OK)
