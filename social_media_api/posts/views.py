@@ -1,6 +1,6 @@
 from rest_framework import generics, permissions, status
 from rest_framework.response import Response
-from django.shortcuts import get_object_or_404
+from rest_framework.generics import get_object_or_404
 from .models import Post, Like
 from notifications.models import Notification
 from django.contrib.contenttypes.models import ContentType
@@ -33,4 +33,5 @@ class UnlikePostView(generics.GenericAPIView):
         deleted, _ = Like.objects.filter(user=request.user, post=post).delete()
         if deleted:
             return Response({"message": "Post unliked"}, status=status.HTTP_200_OK)
-        return Re
+        return Response({"message": "You had not liked this post"}, status=status.HTTP_400_BAD_REQUEST)
+
