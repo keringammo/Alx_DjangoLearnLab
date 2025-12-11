@@ -9,12 +9,11 @@ class LikePostView(generics.GenericAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request, pk):
-        post = get_object_or_404(Post, pk=pk)  # ✅ Correct way to fetch post
+        post = get_object_or_404(Post, pk=pk)
         like, created = Like.objects.get_or_create(user=request.user, post=post)
         if not created:
             return Response({"message": "Already liked"}, status=status.HTTP_400_BAD_REQUEST)
 
-        # Create notification
         Notification.objects.create(
             recipient=post.author,
             actor=request.user,
@@ -22,6 +21,7 @@ class LikePostView(generics.GenericAPIView):
             content_type=ContentType.objects.get_for_model(post),
             object_id=post.id
         )
+
         return Response({"message": "Post liked"}, status=status.HTTP_201_CREATED)
 
 
@@ -29,8 +29,8 @@ class UnlikePostView(generics.GenericAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request, pk):
-        post = get_object_or_404(Post, pk=pk)  # ✅ Correct way to fetch post
+        post = get_object_or_404(Post, pk=pk)
         deleted, _ = Like.objects.filter(user=request.user, post=post).delete()
         if deleted:
             return Response({"message": "Post unliked"}, status=status.HTTP_200_OK)
-        return Response({"message": "You had not liked this post"}, status=status.HTTP_400_BAD_REQUEST)
+        return Re
